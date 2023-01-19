@@ -17,14 +17,15 @@ robot_arm_1.set_damping_factor(Bbt, Bse)
 robot_arm_model_1 = robot_arm_model(robot_arm_1)
 d1 = dynamics_solver(robot_arm_model_1)
 
-yref = np.zeros(27)
+yref = np.zeros(21)
 
 d1.get_horizontal_solver().cost_set(robot_arm_model_1.get_num_integration_steps(), 'yref', yref)
 
-initial_solution = np.zeros(27)
+initial_solution = np.zeros(21)
 initial_solution[3] = 1
 initial_solution[7] = 1
 initial_solution[11] = 1
+initial_solution[12] = 3.69828287e-02
 initial_solution[16] = 0.0027
 d1.get_horizontal_solver().set(0, 'x', initial_solution)
 
@@ -37,6 +38,7 @@ for i in range(robot_arm_model_1.get_num_integration_steps()):
     subseq_solution = d1.get_horizontal_integrator().get('x')
     d1.get_horizontal_solver().set(i+1, 'x', subseq_solution)
 
+a = 1
 
 for i in range(NUM_ITERATIONS): 
 
@@ -44,9 +46,9 @@ for i in range(NUM_ITERATIONS):
     print(d1.get_horizontal_solver().get_residuals())
     print(d1.get_horizontal_solver().get_cost())
 
-"""TO DO: FIX CONSTRAINTS."""
+# """TO DO: FIX CONSTRAINTS."""
 
-d1.get_horizontal_solver().solve()
+# d1.get_horizontal_solver().solve()
 
 
 

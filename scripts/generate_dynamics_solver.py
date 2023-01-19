@@ -39,16 +39,15 @@ class dynamics_solver:
         self.ocp.cost.Vu = np.zeros((ny, nu))
         self.ocp.solver_options.qp_solver_iter_max = 400
         # self.ocp.solver_options.sim_method_num_steps = self.integration_steps
-        self.ocp.parameter_values = np.zeros(12)
+        # self.ocp.parameter_values = np.zeros(12)
         self.ocp.solver_options.qp_solver_warm_start = 2
 
         # self.ocp.solver_options.levenberg_marquardt = 0.1
 
         self.ocp.solver_options.levenberg_marquardt = 1.0
 
-        # self.ocp.solver_options.levenberg_marquardt = 1.0
         self.ocp.solver_options.regularize_method = 'CONVEXIFY'
-
+        
         self.ocp.solver_options.qp_solver = 'PARTIAL_CONDENSING_HPIPM' # 
         # PARTIAL_CONDENSING_HPIPM, FULL_CONDENSING_QPOASES, FULL_CONDENSING_HPIPM,
         # PARTIAL_CONDENSING_QPDUNES, PARTIAL_CONDENSING_OSQP, FULL_CONDENSING_DAQP
@@ -58,25 +57,25 @@ class dynamics_solver:
         self.ocp.solver_options.nlp_solver_type = 'SQP' # SQP_RTI, SQP
         self.ocp.solver_options.tf = self._boundary_length
 
-        wrench_ub = 20
-        pos_max = 5
+        wrench_ub = 0.1
+        pos_max = 0.5
         R_max = 1.005
         q_max = 1.0
         om_max = 1.0
 
-        self.ocp.constraints.idxbx_0 = np.arange(27)
+        self.ocp.constraints.idxbx_0 = np.arange(21)
 
-        self.ocp.constraints.lbx_0 = np.array([0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub, 0, 0, 0, 0, 0, 0, 0, 0, 0])  
+        self.ocp.constraints.lbx_0 = np.array([0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub, 0, 0, 0])
         # p, R, n, m, q, om, tau.
 
-        self.ocp.constraints.ubx_0 = np.array([0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, wrench_ub , wrench_ub , wrench_ub , wrench_ub , wrench_ub , wrench_ub, 0, 0, 0, 0, 0, 0, 0, 0, 0]) 
+        self.ocp.constraints.ubx_0 = np.array([0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, wrench_ub , wrench_ub , wrench_ub , wrench_ub , wrench_ub , wrench_ub, 0, 0, 0.]) 
         # p, R, n, m, q, om, tau.
 
         # self.ocp.constraints.idxbx = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
 
-        self.ocp.constraints.idxbx = np.arange(27)
+        self.ocp.constraints.idxbx = np.arange(21)
 
-        self.ocp.constraints.lbx = np.hstack((-pos_max, -pos_max, -pos_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub, -300*np.ones(6), -30*np.ones(3)))
+        self.ocp.constraints.lbx = np.hstack((-pos_max, -pos_max, -pos_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -R_max, -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub , -wrench_ub, 0, 0, 0))
         self.ocp.constraints.ubx = -self.ocp.constraints.lbx
 
         self.ocp.constraints.ubu = np.array([0]) 
